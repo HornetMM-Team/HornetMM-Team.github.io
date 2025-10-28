@@ -1,0 +1,83 @@
+:root {
+  --bg: #0d0d0d;
+  --fg: #eaeaea;
+  --accent: #ff4f5a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #222;
+  background: #121212;
+}
+
+header .logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+header img {
+  height: 40px;
+  width: 40px;
+}
+
+nav a {
+  margin-left: 1rem;
+  color: #ccc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+nav a:hover {
+  color: var(--accent);
+}
+
+main {
+  text-align: center;
+  padding: 3rem 1rem;
+  max-width: 900px;
+  margin: auto;
+}
+
+#hero {
+  margin-bottom: 4rem;
+}
+
+button {
+  margin-top: 1.5rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #ff6a73;
+}
+
+footer {
+  text-align: center;
+  border-top: 1px solid #222;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #999;
+}
