@@ -3,56 +3,494 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HornetMM — Mod Manager</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>HornetMM — Mod Manager for Hollow Knight</title>
+  <style>
+    :root {
+      --bg-dark: #0a0a0a;
+      --bg-secondary: #121212;
+      --bg-card: #1a1a1a;
+      --fg: #e8e8e8;
+      --fg-muted: #a0a0a0;
+      --accent: #ff6b6b;
+      --accent-hover: #ff8585;
+      --border: #2a2a2a;
+      --hornet-red: #d32f2f;
+      --hk-teal: #00acc1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--fg);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    header {
+      background: var(--bg-secondary);
+      border-bottom: 2px solid var(--border);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo img {
+      height: 45px;
+      width: 45px;
+      filter: drop-shadow(0 0 10px rgba(255, 107, 107, 0.3));
+    }
+
+    .logo h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--hk-teal));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: var(--fg-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    #hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 107, 107, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    #hero h2 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    #hero .subtitle {
+      font-size: 1.25rem;
+      color: var(--fg-muted);
+      margin-bottom: 2rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(255, 107, 107, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--fg);
+      border: 2px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* Content Sections */
+    section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    section p {
+      color: var(--fg-muted);
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 3rem;
+      font-size: 1.1rem;
+    }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--fg);
+    }
+
+    .feature-card p {
+      color: var(--fg-muted);
+      text-align: left;
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    /* Platform Support */
+    .platforms {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+    }
+
+    .platform {
+      text-align: center;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .platform:hover {
+      opacity: 1;
+    }
+
+    .platform-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .platform-name {
+      font-size: 1rem;
+      color: var(--fg-muted);
+    }
+
+    /* Goals Section */
+    .goals-list {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .goal-item {
+      background: var(--bg-card);
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.5rem;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .goal-item:hover {
+      background: var(--bg-secondary);
+      transform: translateX(5px);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-secondary);
+      border-top: 2px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+
+    footer p {
+      color: var(--fg-muted);
+      margin: 0;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--accent-hover);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      #hero h2 {
+        font-size: 2rem;
+      }
+
+      nav {
+        gap: 1rem;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
-    <div class="logo">
-      <img src="assets/logo.png" alt="HornetMM Logo" />
-      <h1>HornetMM</h1>
+    <div class="header-content">
+      <div class="logo">
+        <img src="assets/logo.png" alt="HornetMM Logo" />
+        <h1>HornetMM</h1>
+      </div>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#features">Features</a>
+        <a href="#goals">Goals</a>
+        <a href="https://github.com/HornetMM-Team/HornetMM">GitHub</a>
+      </nav>
     </div>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#features">Features</a>
-      <a href="https://github.com/HornetMM-Team/HornetMM/releases">Download</a>
-      <a href="https://github.com/HornetMM-Team/HornetMM">GitHub</a>
-    </nav>
   </header>
 
   <main>
     <section id="hero">
-      <h2>A cross-platform mod manager for Hollow Knight</h2>
-      <p>Simple. Fast. Open source.</p>
-      <button id="download-btn">Download Latest</button>
+      <h2>A Simple, Lightweight, Cross-Platform<br>Mod Manager for Hollow Knight</h2>
+      <p class="subtitle">Manage your mods with ease. Built with Python. Open source.</p>
+      <div class="cta-buttons">
+        <a href="https://github.com/HornetMM-Team/HornetMM/releases" class="btn btn-primary" id="download-btn">
+          Download Latest
+        </a>
+        <a href="https://github.com/HornetMM-Team/HornetMM" class="btn btn-secondary">
+          View on GitHub
+        </a>
+      </div>
     </section>
 
     <section id="about">
       <h2>About HornetMM</h2>
       <p>
-        HornetMM is a community-driven mod manager for Hollow Knight, built for simplicity and performance.
-        Manage your mods, install updates, and explore new creations—all in one place.
+        HornetMM is a community-driven mod manager for Hollow Knight, designed for simplicity and performance. 
+        Built with Python and cross-platform compatibility in mind, it provides a seamless modding experience 
+        across Windows, Linux, and macOS.
       </p>
+      
+      <div class="platforms">
+        <div class="platform">
+          <div class="platform-icon">🪟</div>
+          <div class="platform-name">Windows</div>
+        </div>
+        <div class="platform">
+          <div class="platform-icon">🐧</div>
+          <div class="platform-name">Linux</div>
+        </div>
+        <div class="platform">
+          <div class="platform-icon">🍎</div>
+          <div class="platform-name">macOS</div>
+        </div>
+      </div>
     </section>
 
     <section id="features">
       <h2>Key Features</h2>
-      <ul>
-        <li>🧩 One-click mod installs</li>
-        <li>⚙️ Support for Monomod/Bepinex</li>
-        <li>🌐 Support with Gamebanana, Nexus Mods, and thunderstore.io<li>
-        <li>🌐 Cross-platform support</li>
-        <li>🐍 Made in Python</li>
-      </ul>
+      <p>Everything you need to manage your Hollow Knight mods in one place</p>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎮</div>
+          <h3>GameBanana 1-Click</h3>
+          <p>Install mods directly from GameBanana with a single click. No manual downloads needed.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">⚙️</div>
+          <h3>BepInEx & MonoMod Support</h3>
+          <p>Full support for BepInEx and MonoMod frameworks. Install and manage both easily.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>Multiple Mod Sources</h3>
+          <p>Support for GameBanana, Nexus Mods, and Thunderstore.io. Access all major mod repositories.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📦</div>
+          <h3>Mod Management</h3>
+          <p>Enable, disable, update, and organize your mods with an intuitive interface.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h3>System Theme Support</h3>
+          <p>Automatically adapts to your system theme on Windows, Linux, and macOS.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🐍</div>
+          <h3>Built with Python</h3>
+          <p>Open source and built with Python using CustomTkinter for a modern UI experience.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="goals">
+      <h2>Project Goals</h2>
+      <p>What we're working on to make HornetMM even better</p>
+      
+      <div class="goals-list">
+        <div class="goal-item">
+          ✅ Add BepInEx/Hollow Knight Modding API Support
+        </div>
+        <div class="goal-item">
+          ✅ Add Thunderstore support for Silksong
+        </div>
+        <div class="goal-item">
+          ✅ Add 1-click mod installation
+        </div>
+        <div class="goal-item">
+          🔄 Add to Flatpak for Steam Deck
+        </div>
+        <div class="goal-item">
+          🔄 Add proper MonoMod detection
+        </div>
+        <div class="goal-item">
+          🔄 Make settings.json fully functional
+        </div>
+        <div class="goal-item">
+          🎯 Add Switch support (long-term goal)
+        </div>
+      </div>
     </section>
   </main>
 
   <footer>
-    <p>© 2025 HornetMM Team — Open Source on 
-      <a href="https://github.com/HornetMM-Team/HornetMM">GitHub</a>.
+    <p>
+      © 2025 HornetMM Team — Licensed under 
+      <a href="https://github.com/HornetMM-Team/HornetMM/blob/main/LICENSE">Apache License 2.0</a> — 
+      Open Source on <a href="https://github.com/HornetMM-Team/HornetMM">GitHub</a>
     </p>
   </footer>
 
-  <script type="module" src="main.ts"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
